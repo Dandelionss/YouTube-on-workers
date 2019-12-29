@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>无服务器YouTube提取器</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <h1>Serverless Youtube Extractor Demo</h1>
+    <a href="https://www.recaled.com">Dandelionc</a>
+    &nbsp;
+    <p>不适用于所有视频.</p>
+    <input type="url" name="input" id="input" value="https://www.youtube.com/watch?v=PD2XgQOyCCk"
+        placeholder="https://www.youtube.com/watch?v=" autofocus>
+    <button onclick="get()">Get</button>
+
+    <ul class="thumb" id="display">
+    </ul>
+
+    <script>
+        window.onload = (event) => {
+            document.getElementById("input").select();
+        }
+        async function get(input) {
+            if (!input) {
+                var input = document.getElementById("input").value;
+            }
+            const videoID = new URL(input).searchParams.get('v');
+            const url = `https://ancient-truth-b499.effervescence.workers.dev/?id=${videoID}`;
+            var display = document.getElementById("display");
+            fetch(url)
+                .then((resp) => resp.json())
+                .then(function (data) {
+                    console.log(data);
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    display.innerHTML =
+                        `<li>
+                        <div class="overlay">
+                            <a href="${data.video}"><img class="thumbnail" src="${data.thumbnail}" width="192" height="109" alt=""></a>
+                            <a href="${data.video}" class="playWrapper">
+                                <!--<span class="playBtn"><img src="http://wptf.com/wp-content/uploads/2014/05/play-button.png" width="50" height="50" alt=""></span>-->
+                            </a>
+                        </div>
+                        <div class="thumbCaption"><a href="${data.video}">${data.title}</a></div>
+                    </li>` + display.innerHTML
+                });
+        }
+    </script>
+</body>
+
+</html>
